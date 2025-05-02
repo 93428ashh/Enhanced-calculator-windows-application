@@ -9,10 +9,10 @@
                 "--module-path",
                 "C:\\Program Files\\Java\\javafx-sdk-24.0.1\\lib",
                 "--add-modules",
-                "javafx.controls,javafx.fxml",
+                "javafx.controls,javafx.graphics,javafx.base",
                 "-d",
                 "bin",
-                "src/CalculatorAppEnhanced.java"
+                "calculatorapp/CalculatorAppEnhanced.java"
             ],
             "group": {
                 "kind": "build",
