@@ -19,9 +19,9 @@ public class CalculatorAppEnhanced extends Application {
     private TextField display = new TextField("0");      // Main number display
     private ListView<String> historyList = new ListView<>();
     private VBox historyPane = new VBox();               // Container for history
-    private ComboBox<String> unitBox = new ComboBox<>();
-    private TextField unitInput = new TextField();
-    private TextField unitOutputDisplay = new TextField();
+  
+   
+  
 
     // --- Calculation State ---
     private double firstOperand = 0;
@@ -37,7 +37,7 @@ public class CalculatorAppEnhanced extends Application {
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle("Calculator with History and Unit Conversion");
+        stage.setTitle("Siva Prints Calculator");
 
         // --- Display Setup ---
         operationDisplayLabel.setAlignment(Pos.CENTER_RIGHT);
@@ -97,30 +97,8 @@ public class CalculatorAppEnhanced extends Application {
         historyControls.setAlignment(Pos.CENTER_LEFT);
 
         // --- Unit Converter Setup ---
-        VBox unitBoxPane = new VBox(5);
-        setupUnitConverter(unitBoxPane);
-        unitBoxPane.setPadding(new Insets(10));
-        unitBoxPane.setPrefWidth(200);
-
-        unitBox.getItems().addAll("cm to mm", "m to mm", "inches to mm");
-        unitBox.setValue("cm to mm");
-
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String newText = change.getControlNewText();
-            return (newText.isEmpty() || newText.matches("-?(\\d*\\.?\\d*)?")) ? change : null;
-        };
-        unitInput.setTextFormatter(new TextFormatter<>(filter));
-        unitInput.setPromptText("Enter value");
-
-        unitOutputDisplay.setEditable(false);
-        unitOutputDisplay.setPromptText("Result");
-        unitOutputDisplay.setStyle("-fx-background-color: -fx-control-inner-background-alt;");
-
-        Button convertButton = new Button("Convert");
-        
-
-        unitBoxPane.getChildren().addAll(new Label("Unit Converter"), unitInput, unitBox, convertButton, unitOutputDisplay);
-        unitBoxPane.setPrefWidth(180);
+       VBox unitBoxPane = new VBox(5); // Declare and initialize unitBoxPane
+     setupUnitConverter(unitBoxPane); // Call the setupUnitConverter method
 
         // --- Main Layout ---
         VBox calculatorPane = new VBox(10, displayStack, grid); // Add displayStack here
@@ -164,8 +142,8 @@ mainContent.setAlignment(Pos.TOP_LEFT);
             // Dropdowns for source and target units
             ComboBox<String> sourceUnitBox = new ComboBox<>();
             ComboBox<String> targetUnitBox = new ComboBox<>();
-            sourceUnitBox.getItems().addAll("mm", "cm", "m", "inches");
-            targetUnitBox.getItems().addAll("mm", "cm", "m", "inches");
+            sourceUnitBox.getItems().addAll("mm", "cm", "m", "inches","feet");
+            targetUnitBox.getItems().addAll("mm", "cm", "m", "inches","feet");
             sourceUnitBox.setValue("mm");
             targetUnitBox.setValue("cm");
         
@@ -212,11 +190,19 @@ mainContent.setAlignment(Pos.TOP_LEFT);
             });
         
             // Layout for the unit converter
-            unitBoxPane.getChildren().addAll(
-                new Label("Unit Converter"),
-                new HBox(10, new Label("From:"), sourceUnitBox, sourceInput),
-                new HBox(10, new Label("To:"), targetUnitBox, targetInput)
-            );
+            VBox sourceLayout = new VBox(5, new Label("From:"), sourceUnitBox, sourceInput);
+    sourceLayout.setPadding(new Insets(5));
+
+    // Layout for the target unit (dropdown above text field)
+    VBox targetLayout = new VBox(5, new Label("To:"), targetUnitBox, targetInput);
+    targetLayout.setPadding(new Insets(5));
+
+    // Add both layouts to the unitBoxPane
+    unitBoxPane.getChildren().addAll(
+        new Label("Unit Converter"),
+        sourceLayout,
+        targetLayout
+    );
             unitBoxPane.setPadding(new Insets(10));
             unitBoxPane.setPrefWidth(250);
         }
@@ -342,6 +328,7 @@ mainContent.setAlignment(Pos.TOP_LEFT);
             case "cm" -> value * 10;
             case "m" -> value * 1000;
             case "inches" -> value * 25.4;
+            case "feet" -> value * 304.8; // 1 foot = 304.8 mm
             default -> 0;
         };
     
@@ -351,6 +338,7 @@ mainContent.setAlignment(Pos.TOP_LEFT);
             case "cm" -> toMM / 10;
             case "m" -> toMM / 1000;
             case "inches" -> toMM / 25.4;
+            case "feet" -> toMM / 304.8; // 1 foot = 304.8 mm
             default -> 0;
         };
     }
